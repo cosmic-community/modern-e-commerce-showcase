@@ -31,7 +31,7 @@ export default async function Home() {
   const featuredProducts = products.slice(0, 3)
 
   // Get hero background image from first product
-  const heroImage = products[0]?.metadata?.images?.[0]?.imgix_url || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=2000&auto=format,compress'
+  const heroImage = products[0]?.metadata?.product_images?.[0]?.imgix_url || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=2000&auto=format,compress'
 
   // Generate JSON-LD structured data for the homepage
   const jsonLd = {
