@@ -39,6 +39,12 @@ export default function Header() {
             >
               About
             </Link>
+            <Link 
+              href="/contact" 
+              className="hover:text-secondary transition-colors font-medium"
+            >
+              Contact
+            </Link>
             
             {user ? (
               <>

@@ -123,6 +123,20 @@ export default async function Home() {
             </div>
           </section>
         )}
+
+        {/* Contact CTA Section */}
+        <section className="bg-primary text-white rounded-lg p-12 text-center">
+          <h2 className="text-3xl font-bold mb-4">Have Questions?</h2>
+          <p className="text-lg mb-6 max-w-2xl mx-auto">
+            We're here to help! Get in touch with our team for product inquiries, support, or any questions you may have.
+          </p>
+          <Link 
+            href="/contact"
+            className="inline-block bg-secondary hover:bg-accent px-8 py-3 rounded-lg font-semibold transition-colors"
+          >
+            Contact Us
+          </Link>
+        </section>
       </div>
     </>
   )
