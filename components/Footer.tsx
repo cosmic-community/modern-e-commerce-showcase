@@ -42,8 +42,24 @@ export default function Footer() {
           </div>
           
           <div>
+            <h4 className="font-semibold mb-4">Legal</h4>
+            <ul className="space-y-2">
+              <li>
+                <a href="/privacy" className="text-gray-300 hover:text-secondary transition-colors">
+                  Privacy Policy
+                </a>
+              </li>
+              <li>
+                <a href="/terms" className="text-gray-300 hover:text-secondary transition-colors">
+                  Terms of Use
+                </a>
+              </li>
+            </ul>
+          </div>
+          
+          <div>
             <h4 className="font-semibold mb-4">Follow Us</h4>
-            <div className="flex gap-4">
+            <div className="flex gap-4 mb-6">
               <a 
                 href="https://twitter.com" 
                 target="_blank" 
@@ -78,9 +94,7 @@ export default function Footer() {
                 </svg>
               </a>
             </div>
-          </div>
-          
-          <div>
+            
             <h4 className="font-semibold mb-4">Powered By</h4>
             <p className="text-gray-300">
               Content managed with{' '}
