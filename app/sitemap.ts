@@ -9,6 +9,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const products = await getProducts() as Product[]
   const collections = await getCollections() as Collection[]
 
+  // Helper function to safely create Date objects
+  const safeDate = (dateString?: string): Date => {
+    if (!dateString) return new Date()
+    const date = new Date(dateString)
+    return isNaN(date.getTime()) ? new Date() : date
+  }
+
   // Static routes
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -40,7 +47,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Product routes
   const productRoutes: MetadataRoute.Sitemap = products.map((product) => ({
     url: `${baseUrl}/products/${product.slug}`,
-    lastModified: new Date(product.modified_at),
+    lastModified: safeDate(product.modified_at),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }))
@@ -48,7 +55,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Collection routes
   const collectionRoutes: MetadataRoute.Sitemap = collections.map((collection) => ({
     url: `${baseUrl}/collections/${collection.slug}`,
-    lastModified: new Date(collection.modified_at),
+    lastModified: safeDate(collection.modified_at),
     changeFrequency: 'weekly' as const,
     priority: 0.7,
   }))

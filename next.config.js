@@ -15,9 +15,6 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-  eslint: {
-    ignoreDuringBuilds: false,
-  },
   // Enable experimental features for better SEO
   experimental: {
     optimizeCss: true,
