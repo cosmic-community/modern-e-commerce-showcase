@@ -5,6 +5,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import CosmicBadge from '@/components/CosmicBadge'
 import { AuthProvider } from '@/lib/auth-context'
+import { CartProvider } from '@/lib/cart-context'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -78,12 +79,14 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <AuthProvider>
-          <Header />
-          <main className="min-h-screen pt-16">
-            {children}
-          </main>
-          <Footer />
-          <CosmicBadge bucketSlug={bucketSlug} />
+          <CartProvider>
+            <Header />
+            <main className="min-h-screen pt-16">
+              {children}
+            </main>
+            <Footer />
+            <CosmicBadge bucketSlug={bucketSlug} />
+          </CartProvider>
         </AuthProvider>
       </body>
     </html>

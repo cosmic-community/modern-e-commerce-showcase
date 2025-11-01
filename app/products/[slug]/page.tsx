@@ -3,6 +3,7 @@ import { getProduct, getReviewsByProduct } from '@/lib/cosmic'
 import { Product, Review } from '@/types'
 import { notFound } from 'next/navigation'
 import ReviewCard from '@/components/ReviewCard'
+import AddToCartButton from '@/components/AddToCartButton'
 import Link from 'next/link'
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
@@ -25,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     openGraph: {
       title: product.metadata.product_name,
       description: product.metadata.description.replace(/<[^>]*>/g, '').slice(0, 160),
-      type: 'website', // Changed: Use 'website' instead of 'product' - Next.js doesn't support 'product' type
+      type: 'website',
       url: `/products/${slug}`,
       images: imageUrl ? [{
         url: imageUrl,
@@ -189,9 +190,12 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
               dangerouslySetInnerHTML={{ __html: product.metadata.description }}
             />
 
+            {/* Add to Cart Button */}
+            <AddToCartButton product={product} />
+
             {/* Collections */}
             {product.metadata.collections && product.metadata.collections.length > 0 && (
-              <div className="mb-8">
+              <div className="mt-8">
                 <h3 className="text-lg font-semibold text-primary mb-3">Collections</h3>
                 <div className="flex flex-wrap gap-2">
                   {product.metadata.collections.map((collection) => (
