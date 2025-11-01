@@ -17,7 +17,7 @@ export async function getProducts() {
   try {
     const response = await cosmic.objects
       .find({ type: 'products' })
-      .props(['id', 'title', 'slug', 'metadata'])
+      .props(['id', 'title', 'slug', 'metadata', 'modified_at'])
       .depth(1)
     
     return response.objects
@@ -34,7 +34,7 @@ export async function getProduct(slug: string) {
   try {
     const response = await cosmic.objects
       .findOne({ type: 'products', slug })
-      .props(['id', 'title', 'slug', 'metadata'])
+      .props(['id', 'title', 'slug', 'metadata', 'modified_at'])
       .depth(1)
     
     return response.object
@@ -51,7 +51,7 @@ export async function getCollections() {
   try {
     const response = await cosmic.objects
       .find({ type: 'collections' })
-      .props(['id', 'title', 'slug', 'metadata'])
+      .props(['id', 'title', 'slug', 'metadata', 'modified_at'])
     
     return response.objects
   } catch (error) {
@@ -67,7 +67,7 @@ export async function getCollection(slug: string) {
   try {
     const response = await cosmic.objects
       .findOne({ type: 'collections', slug })
-      .props(['id', 'title', 'slug', 'metadata'])
+      .props(['id', 'title', 'slug', 'metadata', 'modified_at'])
     
     return response.object
   } catch (error) {
@@ -86,7 +86,7 @@ export async function getProductsByCollection(collectionId: string) {
         type: 'products',
         'metadata.collections': collectionId 
       })
-      .props(['id', 'title', 'slug', 'metadata'])
+      .props(['id', 'title', 'slug', 'metadata', 'modified_at'])
       .depth(1)
     
     return response.objects
@@ -103,7 +103,7 @@ export async function getReviews() {
   try {
     const response = await cosmic.objects
       .find({ type: 'reviews' })
-      .props(['id', 'title', 'slug', 'metadata'])
+      .props(['id', 'title', 'slug', 'metadata', 'created_at'])
       .depth(1)
     
     return response.objects
@@ -123,7 +123,7 @@ export async function getReviewsByProduct(productId: string) {
         type: 'reviews',
         'metadata.product': productId 
       })
-      .props(['id', 'title', 'slug', 'metadata'])
+      .props(['id', 'title', 'slug', 'metadata', 'created_at'])
       .depth(1)
     
     return response.objects

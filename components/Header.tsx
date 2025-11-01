@@ -33,6 +33,12 @@ export default function Header() {
             >
               Reviews
             </Link>
+            <Link 
+              href="/about" 
+              className="hover:text-secondary transition-colors font-medium"
+            >
+              About
+            </Link>
             
             {user ? (
               <>
