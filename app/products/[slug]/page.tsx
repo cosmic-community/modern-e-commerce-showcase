@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     openGraph: {
       title: product.metadata.product_name,
       description: product.metadata.description.replace(/<[^>]*>/g, '').slice(0, 160),
-      type: 'product',
+      type: 'website', // Changed: Use 'website' instead of 'product' - Next.js doesn't support 'product' type
       url: `/products/${slug}`,
       images: imageUrl ? [{
         url: imageUrl,
