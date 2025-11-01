@@ -3,10 +3,15 @@ import jwt from 'jsonwebtoken'
 import { getUserByEmail, getUserById, createUser } from './cosmic'
 import { AuthUser, LoginCredentials, SignupData, User } from '@/types'
 
-const JWT_SECRET = process.env.JWT_SECRET as string
-
-if (!JWT_SECRET || JWT_SECRET.length < 32) {
-  throw new Error('JWT_SECRET must be at least 32 characters long')
+// Validate JWT_SECRET at runtime instead of module load time
+function getJWTSecret(): string {
+  const secret = process.env.JWT_SECRET
+  
+  if (!secret || secret.length < 32) {
+    throw new Error('JWT_SECRET must be at least 32 characters long')
+  }
+  
+  return secret
 }
 
 // Hash password
@@ -22,6 +27,8 @@ export async function verifyPassword(password: string, hash: string): Promise<bo
 
 // Generate JWT token
 export function generateToken(user: AuthUser): string {
+  const JWT_SECRET = getJWTSecret()
+  
   return jwt.sign(
     { 
       id: user.id, 
@@ -36,6 +43,7 @@ export function generateToken(user: AuthUser): string {
 // Verify JWT token
 export function verifyToken(token: string): AuthUser | null {
   try {
+    const JWT_SECRET = getJWTSecret()
     const decoded = jwt.verify(token, JWT_SECRET) as AuthUser
     return decoded
   } catch (error) {
