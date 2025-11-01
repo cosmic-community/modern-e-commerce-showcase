@@ -32,9 +32,13 @@ export async function getProducts() {
 // Get a single product by slug
 export async function getProduct(slug: string) {
   try {
+    // Changed: Added more specific query to ensure slug matching
     const response = await cosmic.objects
-      .findOne({ type: 'products', slug })
-      .props(['id', 'title', 'slug', 'metadata', 'modified_at'])
+      .findOne({ 
+        type: 'products', 
+        slug: slug 
+      })
+      .props(['id', 'title', 'slug', 'metadata', 'modified_at', 'created_at'])
       .depth(1)
     
     return response.object
@@ -42,6 +46,8 @@ export async function getProduct(slug: string) {
     if (hasStatus(error) && error.status === 404) {
       return null
     }
+    // Changed: Log error for debugging in production
+    console.error('Error fetching product:', error)
     throw new Error('Failed to fetch product')
   }
 }

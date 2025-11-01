@@ -7,51 +7,75 @@ import Link from 'next/link'
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const product = await getProduct(slug) as Product | null
+  
+  // Changed: Added try-catch for better error handling
+  try {
+    const product = await getProduct(slug) as Product | null
 
-  if (!product) {
+    if (!product) {
+      return {
+        title: 'Product Not Found',
+      }
+    }
+
+    const primaryImage = product.metadata.product_images?.[0]
+    const imageUrl = primaryImage ? `${primaryImage.imgix_url}?w=1200&h=630&fit=crop&auto=format,compress` : undefined
+
+    return {
+      title: `${product.metadata.product_name}`,
+      description: product.metadata.description.replace(/<[^>]*>/g, '').slice(0, 160),
+      keywords: [product.metadata.product_name, 'product', 'e-commerce', 'shop', 'buy'],
+      openGraph: {
+        title: product.metadata.product_name,
+        description: product.metadata.description.replace(/<[^>]*>/g, '').slice(0, 160),
+        type: 'product',
+        url: `/products/${slug}`,
+        images: imageUrl ? [{
+          url: imageUrl,
+          width: 1200,
+          height: 630,
+          alt: product.metadata.product_name,
+        }] : [],
+      },
+      twitter: {
+        card: 'summary_large_image',
+        title: product.metadata.product_name,
+        description: product.metadata.description.replace(/<[^>]*>/g, '').slice(0, 160),
+        images: imageUrl ? [imageUrl] : [],
+      },
+    }
+  } catch (error) {
+    console.error('Error generating metadata:', error)
     return {
       title: 'Product Not Found',
     }
-  }
-
-  const primaryImage = product.metadata.product_images?.[0]
-  const imageUrl = primaryImage ? `${primaryImage.imgix_url}?w=1200&h=630&fit=crop&auto=format,compress` : undefined
-
-  return {
-    title: `${product.metadata.product_name}`,
-    description: product.metadata.description.replace(/<[^>]*>/g, '').slice(0, 160),
-    keywords: [product.metadata.product_name, 'product', 'e-commerce', 'shop', 'buy'],
-    openGraph: {
-      title: product.metadata.product_name,
-      description: product.metadata.description.replace(/<[^>]*>/g, '').slice(0, 160),
-      type: 'product',
-      url: `/products/${slug}`,
-      images: imageUrl ? [{
-        url: imageUrl,
-        width: 1200,
-        height: 630,
-        alt: product.metadata.product_name,
-      }] : [],
-    },
-    twitter: {
-      card: 'summary_large_image',
-      title: product.metadata.product_name,
-      description: product.metadata.description.replace(/<[^>]*>/g, '').slice(0, 160),
-      images: imageUrl ? [imageUrl] : [],
-    },
   }
 }
 
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const product = await getProduct(slug) as Product | null
+  
+  // Changed: Added try-catch for better error handling
+  let product: Product | null = null
+  try {
+    product = await getProduct(slug) as Product | null
+  } catch (error) {
+    console.error('Error fetching product:', error)
+    notFound()
+  }
 
   if (!product) {
     notFound()
   }
 
-  const reviews = await getReviewsByProduct(product.id) as Review[]
+  // Changed: Added error handling for reviews
+  let reviews: Review[] = []
+  try {
+    reviews = await getReviewsByProduct(product.id) as Review[]
+  } catch (error) {
+    console.error('Error fetching reviews:', error)
+    reviews = []
+  }
   
   // Calculate average rating
   const averageRating = reviews.length > 0
