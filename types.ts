@@ -76,7 +76,7 @@ export interface AuthUser {
   email: string
   full_name: string
   profile_picture?: string
-  bio?: string // Added: bio property to match what getCurrentUser returns
+  bio?: string
 }
 
 export interface LoginCredentials {
