@@ -30,6 +30,9 @@ export default async function Home() {
   // Get featured products (first 3)
   const featuredProducts = products.slice(0, 3)
 
+  // Get hero background image from first product
+  const heroImage = products[0]?.metadata?.images?.[0]?.imgix_url || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=2000&auto=format,compress'
+
   // Generate JSON-LD structured data for the homepage
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -54,8 +57,18 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      {/* Enhanced Hero Section with Gradient Background */}
+      {/* Enhanced Hero Section with Product Image Background */}
       <section className="relative bg-gradient-to-br from-primary via-blue-800 to-secondary overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0">
+          <img 
+            src={`${heroImage}?w=2000&h=1200&fit=crop&auto=format,compress`}
+            alt="Featured products"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-blue-800/85 to-secondary/90"></div>
+        </div>
+
         {/* Animated Background Elements */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-40 -right-40 w-80 h-80 bg-accent/20 rounded-full blur-3xl animate-pulse"></div>
@@ -87,13 +100,6 @@ export default async function Home() {
               </Link>
             </div>
           </div>
-        </div>
-
-        {/* Decorative Wave Border */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg className="w-full h-12 md:h-16 text-white" viewBox="0 0 1200 120" preserveAspectRatio="none">
-            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="currentColor"></path>
-          </svg>
         </div>
       </section>
 
