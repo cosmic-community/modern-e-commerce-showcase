@@ -216,3 +216,31 @@ export async function updateUserProfile(id: string, data: {
     throw new Error('Failed to update user profile')
   }
 }
+
+// Contact form functions
+
+// Create contact submission
+export async function createContactSubmission(data: {
+  name: string
+  email: string
+  subject: string
+  message: string
+}) {
+  try {
+    const response = await cosmic.objects.insertOne({
+      title: `${data.subject} - ${data.name}`,
+      type: 'contact-submissions',
+      metadata: {
+        name: data.name,
+        email: data.email,
+        subject: data.subject,
+        message: data.message,
+        status: 'New'
+      }
+    })
+    
+    return response.object
+  } catch (error) {
+    throw new Error('Failed to create contact submission')
+  }
+}

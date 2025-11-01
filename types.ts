@@ -70,6 +70,18 @@ export interface User extends CosmicObject {
   }
 }
 
+// Contact submission interface
+export interface ContactSubmission extends CosmicObject {
+  type: 'contact-submissions'
+  metadata: {
+    name: string
+    email: string
+    subject: string
+    message: string
+    status: string
+  }
+}
+
 // Auth types
 export interface AuthUser {
   id: string
