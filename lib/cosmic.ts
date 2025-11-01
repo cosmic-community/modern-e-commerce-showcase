@@ -134,3 +134,85 @@ export async function getReviewsByProduct(productId: string) {
     throw new Error('Failed to fetch reviews by product')
   }
 }
+
+// User authentication functions
+
+// Get user by email
+export async function getUserByEmail(email: string) {
+  try {
+    const response = await cosmic.objects
+      .find({ 
+        type: 'users',
+        'metadata.email': email 
+      })
+      .props(['id', 'title', 'slug', 'metadata'])
+    
+    return response.objects[0] || null
+  } catch (error) {
+    if (hasStatus(error) && error.status === 404) {
+      return null
+    }
+    throw new Error('Failed to fetch user')
+  }
+}
+
+// Get user by ID
+export async function getUserById(id: string) {
+  try {
+    const response = await cosmic.objects
+      .findOne({ 
+        type: 'users',
+        id 
+      })
+      .props(['id', 'title', 'slug', 'metadata'])
+    
+    return response.object
+  } catch (error) {
+    if (hasStatus(error) && error.status === 404) {
+      return null
+    }
+    throw new Error('Failed to fetch user')
+  }
+}
+
+// Create new user
+export async function createUser(data: {
+  full_name: string
+  email: string
+  password_hash: string
+}) {
+  try {
+    const response = await cosmic.objects.insertOne({
+      title: data.full_name,
+      type: 'users',
+      metadata: {
+        full_name: data.full_name,
+        email: data.email,
+        password_hash: data.password_hash,
+        account_status: 'Active'
+      }
+    })
+    
+    return response.object
+  } catch (error) {
+    throw new Error('Failed to create user')
+  }
+}
+
+// Update user profile
+export async function updateUserProfile(id: string, data: {
+  full_name?: string
+  bio?: string
+  profile_picture?: string
+}) {
+  try {
+    const response = await cosmic.objects.updateOne(id, {
+      title: data.full_name,
+      metadata: data
+    })
+    
+    return response.object
+  } catch (error) {
+    throw new Error('Failed to update user profile')
+  }
+}

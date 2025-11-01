@@ -54,8 +54,51 @@ export interface Review extends CosmicObject {
   }
 }
 
+// User interface
+export interface User extends CosmicObject {
+  type: 'users'
+  metadata: {
+    full_name: string
+    email: string
+    password_hash: string
+    profile_picture?: {
+      url: string
+      imgix_url: string
+    }
+    bio?: string
+    account_status: string
+  }
+}
+
+// Auth types
+export interface AuthUser {
+  id: string
+  email: string
+  full_name: string
+  profile_picture?: string
+  bio?: string
+}
+
+export interface LoginCredentials {
+  email: string
+  password: string
+}
+
+export interface SignupData {
+  full_name: string
+  email: string
+  password: string
+}
+
 // API response types
 export interface CosmicResponse<T> {
   objects: T[]
   total: number
+}
+
+export interface AuthResponse {
+  success: boolean
+  user?: AuthUser
+  token?: string
+  message?: string
 }
