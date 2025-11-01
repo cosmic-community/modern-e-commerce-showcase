@@ -28,6 +28,11 @@ export default function Footer() {
                   Reviews
                 </a>
               </li>
+              <li>
+                <a href="/about" className="text-gray-300 hover:text-secondary transition-colors">
+                  About
+                </a>
+              </li>
             </ul>
           </div>
           
