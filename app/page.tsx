@@ -53,17 +53,51 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Hero Section */}
-        <section className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-primary mb-4">
-            Discover Quality Products
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Explore our curated collection of premium products with authentic customer reviews
-          </p>
-        </section>
+      
+      {/* Enhanced Hero Section with Gradient Background */}
+      <section className="relative bg-gradient-to-br from-primary via-blue-800 to-secondary overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-accent/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute top-60 -left-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+          <div className="absolute bottom-20 right-1/3 w-64 h-64 bg-blue-400/10 rounded-full blur-2xl animate-pulse delay-1000"></div>
+        </div>
+        
+        {/* Hero Content */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+          <div className="text-center">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 animate-fade-in">
+              Discover Quality Products
+            </h1>
+            <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto mb-10 animate-fade-in-delay">
+              Explore our curated collection of premium products with authentic customer reviews
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-delay-2">
+              <Link 
+                href="/products" 
+                className="bg-white text-primary hover:bg-blue-50 px-8 py-4 rounded-lg font-semibold text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                Shop Now
+              </Link>
+              <Link 
+                href="/collections" 
+                className="bg-secondary/20 backdrop-blur-sm text-white hover:bg-secondary/30 px-8 py-4 rounded-lg font-semibold text-lg transition-all border-2 border-white/30 hover:border-white/50"
+              >
+                View Collections
+              </Link>
+            </div>
+          </div>
+        </div>
 
+        {/* Decorative Wave Border */}
+        <div className="absolute bottom-0 left-0 right-0">
+          <svg className="w-full h-12 md:h-16 text-white" viewBox="0 0 1200 120" preserveAspectRatio="none">
+            <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" fill="currentColor"></path>
+          </svg>
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Featured Collections */}
         {collections.length > 0 && (
           <section className="mb-16">
