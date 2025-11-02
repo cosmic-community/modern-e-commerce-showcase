@@ -30,6 +30,9 @@ export default async function Home() {
   // Get featured products (first 3)
   const featuredProducts = products.slice(0, 3)
 
+  // Get hero background image from first product
+  const heroImage = products[0]?.metadata?.product_images?.[0]?.imgix_url || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=2000&auto=format,compress'
+
   // Generate JSON-LD structured data for the homepage
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -53,17 +56,54 @@ export default async function Home() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Hero Section */}
-        <section className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-primary mb-4">
-            Discover Quality Products
-          </h1>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Explore our curated collection of premium products with authentic customer reviews
-          </p>
-        </section>
+      
+      {/* Enhanced Hero Section with Product Image Background */}
+      <section className="relative bg-gradient-to-br from-primary via-blue-800 to-secondary overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div className="absolute inset-0">
+          <img 
+            src={`${heroImage}?w=2000&h=1200&fit=crop&auto=format,compress`}
+            alt="Featured products"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-blue-800/85 to-secondary/90"></div>
+        </div>
 
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-accent/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute top-60 -left-40 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse delay-700"></div>
+          <div className="absolute bottom-20 right-1/3 w-64 h-64 bg-blue-400/10 rounded-full blur-2xl animate-pulse delay-1000"></div>
+        </div>
+        
+        {/* Hero Content */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32">
+          <div className="text-center">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 animate-fade-in">
+              Discover Quality Products
+            </h1>
+            <p className="text-xl md:text-2xl text-blue-100 max-w-3xl mx-auto mb-10 animate-fade-in-delay">
+              Explore our curated collection of premium products with authentic customer reviews
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-delay-2">
+              <Link 
+                href="/products" 
+                className="bg-white text-primary hover:bg-blue-50 px-8 py-4 rounded-lg font-semibold text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                Shop Now
+              </Link>
+              <Link 
+                href="/collections" 
+                className="bg-secondary/20 backdrop-blur-sm text-white hover:bg-secondary/30 px-8 py-4 rounded-lg font-semibold text-lg transition-all border-2 border-white/30 hover:border-white/50"
+              >
+                View Collections
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Featured Collections */}
         {collections.length > 0 && (
           <section className="mb-16">
