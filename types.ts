@@ -82,6 +82,32 @@ export interface ContactSubmission extends CosmicObject {
   }
 }
 
+// Order interface
+export interface Order extends CosmicObject {
+  type: 'orders'
+  metadata: {
+    stripe_session_id: string
+    stripe_payment_intent: string
+    customer_name: string
+    customer_email: string
+    customer_phone: string
+    shipping_address: string
+    shipping_city: string
+    shipping_state: string
+    shipping_zip: string
+    order_items: Array<{
+      product_id: string
+      product_name: string
+      quantity: number
+      price: number
+    }>
+    total_amount: number
+    order_status: string
+    payment_status: string
+    order_date: string
+  }
+}
+
 // Auth types
 export interface AuthUser {
   id: string
