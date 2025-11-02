@@ -227,20 +227,47 @@ export async function createContactSubmission(data: {
   message: string
 }) {
   try {
+    // Changed: Using proper metafields array structure instead of just metadata object
     const response = await cosmic.objects.insertOne({
       title: `${data.subject} - ${data.name}`,
       type: 'contact-submissions',
-      metadata: {
-        name: data.name,
-        email: data.email,
-        subject: data.subject,
-        message: data.message,
-        status: 'New'
-      }
+      metafields: [
+        {
+          title: 'Name',
+          key: 'name',
+          type: 'text',
+          value: data.name
+        },
+        {
+          title: 'Email',
+          key: 'email',
+          type: 'text',
+          value: data.email
+        },
+        {
+          title: 'Subject',
+          key: 'subject',
+          type: 'text',
+          value: data.subject
+        },
+        {
+          title: 'Message',
+          key: 'message',
+          type: 'textarea',
+          value: data.message
+        },
+        {
+          title: 'Status',
+          key: 'status',
+          type: 'select-dropdown',
+          value: 'New'
+        }
+      ]
     })
     
     return response.object
   } catch (error) {
+    console.error('Cosmic API error:', error)
     throw new Error('Failed to create contact submission')
   }
 }
