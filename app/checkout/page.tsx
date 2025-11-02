@@ -11,6 +11,7 @@ export default function CheckoutPage() {
   const { user } = useAuth()
   const router = useRouter()
   const [processing, setProcessing] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     fullName: user?.full_name || '',
     email: user?.email || '',
@@ -19,9 +20,6 @@ export default function CheckoutPage() {
     city: '',
     state: '',
     zipCode: '',
-    cardNumber: '',
-    cardExpiry: '',
-    cardCvv: ''
   })
 
   if (items.length === 0) {
@@ -51,12 +49,38 @@ export default function CheckoutPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setProcessing(true)
+    setError(null)
 
-    // Simulate payment processing
-    setTimeout(() => {
-      clearCart()
-      router.push('/checkout/success')
-    }, 2000)
+    try {
+      // Create Stripe checkout session
+      const response = await fetch('/api/checkout/create-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          items,
+          customerInfo: formData,
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to create checkout session')
+      }
+
+      const { url } = await response.json()
+
+      // Redirect to Stripe Checkout
+      if (url) {
+        window.location.href = url
+      } else {
+        throw new Error('No checkout URL returned')
+      }
+    } catch (error) {
+      console.error('Checkout error:', error)
+      setError('Failed to process checkout. Please try again.')
+      setProcessing(false)
+    }
   }
 
   const subtotal = getTotalPrice()
@@ -67,6 +91,12 @@ export default function CheckoutPage() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <h1 className="text-4xl font-bold text-primary mb-8">Checkout</h1>
+
+      {error && (
+        <div className="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+          {error}
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Checkout Form */}
@@ -186,56 +216,18 @@ export default function CheckoutPage() {
               </div>
             </div>
 
-            {/* Payment Information */}
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-bold text-primary mb-6">Payment Information</h2>
-              <div className="space-y-4">
+            {/* Payment Information Note */}
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+              <div className="flex items-start gap-3">
+                <svg className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
                 <div>
-                  <label htmlFor="cardNumber" className="block text-sm font-medium text-gray-700 mb-2">
-                    Card Number *
-                  </label>
-                  <input
-                    type="text"
-                    id="cardNumber"
-                    name="cardNumber"
-                    required
-                    placeholder="1234 5678 9012 3456"
-                    value={formData.cardNumber}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="cardExpiry" className="block text-sm font-medium text-gray-700 mb-2">
-                      Expiry Date *
-                    </label>
-                    <input
-                      type="text"
-                      id="cardExpiry"
-                      name="cardExpiry"
-                      required
-                      placeholder="MM/YY"
-                      value={formData.cardExpiry}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="cardCvv" className="block text-sm font-medium text-gray-700 mb-2">
-                      CVV *
-                    </label>
-                    <input
-                      type="text"
-                      id="cardCvv"
-                      name="cardCvv"
-                      required
-                      placeholder="123"
-                      value={formData.cardCvv}
-                      onChange={handleInputChange}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-secondary focus:border-transparent"
-                    />
-                  </div>
+                  <h3 className="text-lg font-semibold text-blue-900 mb-2">Secure Payment with Stripe</h3>
+                  <p className="text-blue-800 text-sm">
+                    You'll be redirected to Stripe's secure checkout page to complete your payment. 
+                    All payment information is processed securely by Stripe.
+                  </p>
                 </div>
               </div>
             </div>
@@ -250,7 +242,7 @@ export default function CheckoutPage() {
                   : 'bg-secondary hover:bg-accent text-white'
               }`}
             >
-              {processing ? 'Processing...' : 'Complete Purchase'}
+              {processing ? 'Redirecting to Stripe...' : 'Proceed to Payment'}
             </button>
           </form>
         </div>
