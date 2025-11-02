@@ -48,6 +48,7 @@ export async function POST(request: NextRequest) {
         product_data: {
           name: 'Shipping',
           description: 'Standard shipping',
+          images: [], // Changed: Added required images property for Stripe API
         },
         unit_amount: 1000, // $10.00 in cents
       },
@@ -66,6 +67,7 @@ export async function POST(request: NextRequest) {
         product_data: {
           name: 'Tax',
           description: 'Sales tax (8%)',
+          images: [], // Changed: Added required images property for Stripe API
         },
         unit_amount: taxAmount,
       },
